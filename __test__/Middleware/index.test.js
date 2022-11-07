@@ -1,11 +1,7 @@
 /* eslint-disable no-undef */
-const authMiddleware = require('../../Middleware/authentication')
 const errorHandler = require('../../Middleware/errorHandler')
 const notFound = require('../../Middleware/notFound')
-const mongoose = require('mongoose')
-const { signAccessToken } = require('../../Utils/tokens')
 require('dotenv').config()
-const jwt = require('jsonwebtoken')
 
 const mockResponse = () => {
     const res = {}
@@ -14,88 +10,6 @@ const mockResponse = () => {
     return res
 }
 
-describe('Auth Middleware', () => {
-    describe('Given a valid accessToken', () => {
-        test('Should return a request object with a userid', async () => {
-            const token = await signAccessToken(new mongoose.Types.ObjectId().toString())
-            const req = {
-                headers: {
-                    authorization: 'Bearer ' + token
-                }
-            }
-            const next = jest.fn()
-            const res = jest.fn()
-            await authMiddleware(req, res, next)
-
-            expect(next).toHaveBeenCalled()
-            expect(token).toEqual(expect.any(String))
-            expect(req).toEqual({
-                headers: {
-                    authorization: expect.any(String)
-                },
-                user: {
-                    userID: expect.any(String)
-                }
-            })
-        })
-    })
-
-    describe('Given an Invalid accessToken', () => {
-        test('No Bearer: Should return a 401-statusCode with an error message', async () => {
-            const token = await signAccessToken(new mongoose.Types.ObjectId().toString())
-            const req = {
-                headers: {
-                    authorization: token
-                }
-            }
-            const next = jest.fn()
-            const res = jest.fn()
-            try {
-                await authMiddleware(req, res, next)
-            } catch (error) {
-                expect(next).not.toHaveBeenCalled()
-                expect(error.message).toMatch('Authentication Invalid')
-                expect(error.statusCode).toBe(401)
-            }
-        })
-        test('Strange/tampered token: Should return a 401-statusCode with an error message', async () => {
-            const req = {
-                headers: {
-                    authorization: 'Bearer ' + 'wrongtoken/invalidtoken'
-                }
-            }
-            const next = jest.fn()
-            const res = jest.fn()
-            try {
-                await authMiddleware(req, res, next)
-            } catch (error) {
-                expect(next).not.toHaveBeenCalled()
-                expect(error.message).toMatch('Authentication Invalid')
-                expect(error.statusCode).toBe(401)
-            }
-        })
-        test('Expired token: Should return a 401-statusCode with an error message', async () => {
-            const token = jwt.sign({
-                userID: new mongoose.Types.ObjectId().toString()
-            }, process.env.JWT_SECRET_ACCESS_TOKEN, { expiresIn: '1s' })
-            const req = {
-                headers: {
-                    authorization: 'Bearer ' + token
-                }
-            }
-            const next = jest.fn()
-            const res = jest.fn()
-            await new Promise(resolve => setTimeout(resolve, 15000))
-            try {
-                await authMiddleware(req, res, next)
-            } catch (error) {
-                expect(next).not.toHaveBeenCalled()
-                expect(error.message).toBe('jwt expired')
-                expect(error.statusCode).toBe(401)
-            }
-        }, '20000')
-    })
-})
 describe('Error Handler Middleware', () => {
     describe('Given a valid error object', () => {
         test('Error Code=11000 :Should return a response object with a 400 statusCode and body', async () => {

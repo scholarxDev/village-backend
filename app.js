@@ -5,8 +5,6 @@ require('express-async-errors')
 // app setup
 const express = require('express')
 const app = express()
-const passport = require('passport')
-const authRouter = require('./Auth/routes')
 
 // extra security packages
 const cors = require('cors')
@@ -20,7 +18,6 @@ const errorHandlerMiddleware = require('./Middleware/errorHandler')
 // inbuilt-middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(passport.initialize())
 
 // cors settings
 app.use(cors())
@@ -36,7 +33,6 @@ app.get('/', (req, res) => {
 })
 
 // routes
-app.use('/api/v1/auth', authRouter)
 
 app.use(errorHandlerMiddleware)
 app.use(notFound)
