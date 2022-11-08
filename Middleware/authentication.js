@@ -11,7 +11,7 @@ const authMiddleware = async (req, res, next) => {
     accessToken = accessToken.split(' ')[1]
     try {
         const payload = jwt.verify(accessToken, process.env.JWT_SECRET_ACCESS_TOKEN)
-        req.user = { userID: payload.id }
+        req.user = { userID: payload.id, role: payload.role }
         next()
     } catch (error) {
         const message = error.name === 'TokenExpiredError' ? error.message : 'Authentication Invalid'
