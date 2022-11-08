@@ -6,7 +6,7 @@ This spells out project guidelines to ease project on-boarding and setup.
 
 Available features include:
 
-- User Registration and Authentication(Auth Module)
+- Appeals
 
 
 #### Setup
@@ -51,8 +51,6 @@ npm test
 
 [Documentation]()
 
-**1**. **Registration And Authentication**
+**1**. **Appeals**
 
-  * Register
-  * Login
-  * Google sign-in
+  * Create appeal
