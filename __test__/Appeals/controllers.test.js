@@ -102,4 +102,27 @@ describe('Appeal', () => {
             })
         })
     })
+
+    describe('Get One Appeal Route', () => {
+        describe('Given the correct parameters', () => {
+            test('Should return 200-statuscode and a body', async () => {
+                await new Appeal({ ...dummyAppeal }).save()
+
+                const response = await request(app)
+                    .get(`/api/v1/appeal/${appealID}`)
+
+                expect(response.statusCode).toBe(200)
+                expect(response.body.status).toBe('success')
+            })
+        })
+        describe('Given the appeal does not exist', () => {
+            test('Should return 404-statusCode and error message', async () => {
+                const response = await request(app)
+                    .get('/api/v1/appeal/62f3c6de0b6fab363158137b')
+
+                expect(response.statusCode).toBe(404)
+                expect(response.body).toEqual({ msg: 'sorry this appeal does not exist' })
+            })
+        })
+    })
 })
