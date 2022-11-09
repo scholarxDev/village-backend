@@ -125,4 +125,46 @@ describe('Appeal', () => {
             })
         })
     })
+
+    describe('Update Appeal Route', () => {
+        describe('Given the user is validated', () => {
+            // To run this particular test, provide an existing path to an image on your harddisk
+            test.skip('Should return 200-statusCode and updated body if appeal exists', async () => {
+                const accessToken = await signAccessToken(userID)
+                await new Appeal({ ...dummyAppeal }).save()
+                const image = 'C:/Users/pc/Desktop/village/uploads/image_upload/image-1667995955757-873893870night_tree.jpg'
+
+                const response = await request(app)
+                    .patch(`/api/v1/appeal/update/${appealID}`)
+                    .set('Authorization', `Bearer ${accessToken}`)
+                    .attach('image', image)
+                    .field('name', 'John Doe(updated)')
+
+                expect(response.statusCode).toBe(200)
+                expect(response.body.status).toBe('success')
+            })
+
+            test('Should return 404-statusCode and error message if appeal does not exists', async () => {
+                const accessToken = await signAccessToken(userID)
+
+                const response = await request(app)
+                    .patch('/api/v1/appeal/update/62f3c6de0b6fab363158137c')
+                    .set('Authorization', `Bearer ${accessToken}`)
+                    .field('name', 'John Doe(updated)')
+
+                expect(response.statusCode).toBe(404)
+                expect(response.body).toEqual({ msg: 'sorry this appeal does not exist' })
+            })
+        })
+        describe('Given the user is not validated', () => {
+            test('Should return 404-statusCode and error message', async () => {
+                const response = await request(app)
+                    .patch('/api/v1/appeal/update/62f3c6de0b6fab363158137c')
+                    .field('name', 'John Doe(updated)')
+
+                expect(response.statusCode).toBe(401)
+                expect(response.body).toEqual({ msg: 'Authentication Invalid' })
+            })
+        })
+    })
 })
