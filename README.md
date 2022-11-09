@@ -57,3 +57,4 @@ npm test
   * Get all appeals(particular user)
   * Get one appeal
   * Update appeal
+  * Delete appeal
