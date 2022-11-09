@@ -54,3 +54,4 @@ npm test
 **1**. **Appeals**
 
   * Create appeal
+  * Get all appeals(particular user)
