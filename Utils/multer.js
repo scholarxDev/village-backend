@@ -4,12 +4,8 @@ const maxSize = 1 * 1000 * 1000
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        if (file) {
-            const path = process.cwd() + '/uploads/image_upload'
-            cb(null, path)
-        } else {
-            return cb(new Error('personal image is required'), false)
-        }
+        const path = process.cwd() + '/uploads/image_upload'
+        cb(null, path)
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
