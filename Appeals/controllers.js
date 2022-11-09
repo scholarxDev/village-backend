@@ -51,9 +51,21 @@ const updateAppeal = async (req, res) => {
     res.status(StatusCodes.OK).json({ status: 'success', appeal })
 }
 
+const deleteAppeal = async (req, res) => {
+    const { id: _id } = req.params
+
+    const appeal = await Appeal.findByIdAndDelete(_id)
+    if (!appeal) throw new NotFoundError('sorry this appeal does not exist')
+
+    await deleteImage(appeal.personal_image)
+
+    res.status(StatusCodes.OK).json({ status: 'success', msg: 'appeal deleted' })
+}
+
 module.exports = {
     createAppeal,
     getAll,
     getOne,
-    updateAppeal
+    updateAppeal,
+    deleteAppeal
 }
