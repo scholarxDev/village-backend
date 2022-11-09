@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 const request = require('supertest')
 const app = require('../../app')
+const Appeal = require('../../Appeals/model')
 const mongoose = require('mongoose')
 const { MongoMemoryServer } = require('mongodb-memory-server')
 const { signAccessToken } = require('../test.tokens')
@@ -18,6 +19,24 @@ afterEach(async () => {
 })
 
 const userID = '62f3c6de0b6fab3631581379'
+const appealID = '62f3c6de0b6fab363158137b'
+
+const dummyAppeal = {
+    _id: appealID,
+    userid: userID,
+    name: 'Jane Doe',
+    nationality: 'Nigerian',
+    level_of_education: 'Undergraduate',
+    funding_recipient: 'personal',
+    phone_number: '08081713338',
+    personal_image: 'image route',
+    about_yourself: 'about myself',
+    why_need_funding: 'Why I need funding',
+    amount: 1000000,
+    funding_deadline: '2022-12-15',
+    withdrawal_method: 'directly',
+    final_words: 'finaly words'
+}
 
 describe('Appeal', () => {
     describe('Create Appeal Route', () => {
@@ -50,6 +69,33 @@ describe('Appeal', () => {
             test('Should return 404-statusCode and error message', async () => {
                 const response = await request(app)
                     .post('/api/v1/appeal/create')
+
+                expect(response.statusCode).toBe(401)
+                expect(response.body).toEqual({ msg: 'Authentication Invalid' })
+            })
+        })
+    })
+
+    describe('Get All Appeals Route', () => {
+        describe('Given the user is validated', () => {
+            test('Should return 200-statuscode and an array of appeals', async () => {
+                const accessToken = await signAccessToken(userID)
+                await new Appeal({ ...dummyAppeal }).save()
+
+                const response = await request(app)
+                    .get('/api/v1/appeal/profile/all')
+                    .set('Authorization', `Bearer ${accessToken}`)
+
+                expect(response.statusCode).toBe(200)
+                expect(response.body.status).toBe('success')
+            })
+        })
+        describe('Given the user is not validated', () => {
+            test('Should return 404-statusCode and error message', async () => {
+                await new Appeal({ ...dummyAppeal }).save()
+
+                const response = await request(app)
+                    .get('/api/v1/appeal/profile/all')
 
                 expect(response.statusCode).toBe(401)
                 expect(response.body).toEqual({ msg: 'Authentication Invalid' })

@@ -16,6 +16,15 @@ const createAppeal = async (req, res) => {
     res.status(StatusCodes.CREATED).json({ status: 'success', appeal })
 }
 
+const getAll = async (req, res) => {
+    const { userID: userid } = req.user
+
+    const appeals = await Appeal.find({ userid }).select('-__v -updatedAt -createdAt')
+
+    res.status(StatusCodes.OK).json({ status: 'success', appeals })
+}
+
 module.exports = {
-    createAppeal
+    createAppeal,
+    getAll
 }
