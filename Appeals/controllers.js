@@ -1,6 +1,7 @@
 const Appeal = require('./model')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../Errors')
+const { deleteImage } = require('../Utils/images')
 
 const createAppeal = async (req, res) => {
     const body = { ...req.body }
@@ -33,8 +34,26 @@ const getOne = async (req, res) => {
     res.status(StatusCodes.OK).json({ status: 'success', appeal })
 }
 
+const updateAppeal = async (req, res) => {
+    const { id: _id } = req.params
+    const image = req.file
+
+    const oldAppeal = await Appeal.findById(_id)
+    if (!oldAppeal) throw new NotFoundError('sorry this appeal does not exist')
+
+    const update = { ...req.body }
+    if (image) {
+        await deleteImage(oldAppeal.personal_image)
+        update.personal_image = `/uploads/image_upload/${image.filename}`
+    }
+
+    const appeal = await Appeal.findByIdAndUpdate({ _id }, update, { new: true, runValidators: true })
+    res.status(StatusCodes.OK).json({ status: 'success', appeal })
+}
+
 module.exports = {
     createAppeal,
     getAll,
-    getOne
+    getOne,
+    updateAppeal
 }
