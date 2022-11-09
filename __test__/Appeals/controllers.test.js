@@ -29,7 +29,7 @@ const dummyAppeal = {
     level_of_education: 'Undergraduate',
     funding_recipient: 'personal',
     phone_number: '08081713338',
-    personal_image: 'image route',
+    personal_image: '/uploads/image_upload/image-1667981932455-322084408orb.jpg',
     about_yourself: 'about myself',
     why_need_funding: 'Why I need funding',
     amount: 1000000,
@@ -161,6 +161,42 @@ describe('Appeal', () => {
                 const response = await request(app)
                     .patch('/api/v1/appeal/update/62f3c6de0b6fab363158137c')
                     .field('name', 'John Doe(updated)')
+
+                expect(response.statusCode).toBe(401)
+                expect(response.body).toEqual({ msg: 'Authentication Invalid' })
+            })
+        })
+    })
+
+    describe('Delete Appeal Route', () => {
+        describe('Given the user is validated', () => {
+            test('Should return 200-statusCode and message if appeal exists', async () => {
+                const accessToken = await signAccessToken(userID)
+                await new Appeal({ ...dummyAppeal }).save()
+
+                const response = await request(app)
+                    .del(`/api/v1/appeal/delete/${appealID}`)
+                    .set('Authorization', `Bearer ${accessToken}`)
+
+                expect(response.statusCode).toBe(200)
+                expect(response.body.status).toBe('success')
+            })
+
+            test('Should return 404-statusCode and error message if appeal does not exists', async () => {
+                const accessToken = await signAccessToken(userID)
+
+                const response = await request(app)
+                    .del('/api/v1/appeal/delete/62f3c6de0b6fab363158137c')
+                    .set('Authorization', `Bearer ${accessToken}`)
+
+                expect(response.statusCode).toBe(404)
+                expect(response.body).toEqual({ msg: 'sorry this appeal does not exist' })
+            })
+        })
+        describe('Given the user is not validated', () => {
+            test('Should return 404-statusCode and error message', async () => {
+                const response = await request(app)
+                    .del('/api/v1/appeal/delete/62f3c6de0b6fab363158137c')
 
                 expect(response.statusCode).toBe(401)
                 expect(response.body).toEqual({ msg: 'Authentication Invalid' })
