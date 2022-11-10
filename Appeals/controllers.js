@@ -72,11 +72,20 @@ const appealList = async (req, res) => {
     res.status(StatusCodes.OK).json({ status: 'success', appeals, nbhits: appeals.length })
 }
 
+const comment = async (req, res) => {
+    const { comment } = req.body
+    const { id: _id } = req.params
+
+    const appeal = await Appeal.findByIdAndUpdate({ _id }, { $push: { comments: comment } }, { runValidators: true, new: true })
+    res.status(StatusCodes.OK).json({ status: 'success', appeal })
+}
+
 module.exports = {
     createAppeal,
     getAll,
     getOne,
     updateAppeal,
     deleteAppeal,
-    appealList
+    appealList,
+    comment
 }

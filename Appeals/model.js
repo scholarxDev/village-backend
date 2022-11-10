@@ -66,7 +66,16 @@ const AppealSchema = new mongoose.Schema({
         required: [true, 'please provide final words about this funding']
     },
     comments: [{
-        type: String
+        name: {
+            type: String,
+            required: [true, 'please provide your name']
+        },
+        text: {
+            type: String,
+            required: [true, 'please provide your comment']
+        },
+        _id: false
+
     }],
     likes: {
         type: Number,
