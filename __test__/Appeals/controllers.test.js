@@ -218,4 +218,19 @@ describe('Appeal', () => {
             })
         })
     })
+
+    describe('Comment on an Appeal Route', () => {
+        describe('Given a valid request body', () => {
+            test('Should return 200-statusCode and updated body', async () => {
+                await new Appeal({ ...dummyAppeal }).save()
+
+                const response = await request(app)
+                    .patch(`/api/v1/appeal/comment/${appealID}`)
+                    .send({ comment: { name: 'future Hendrixx', text: 'new comment' } })
+
+                expect(response.statusCode).toBe(200)
+                expect(response.body.status).toBe('success')
+            })
+        })
+    })
 })
