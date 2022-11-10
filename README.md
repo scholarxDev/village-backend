@@ -58,3 +58,4 @@ npm test
   * Get one appeal
   * Update appeal
   * Delete appeal
+  * List of appeals
