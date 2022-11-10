@@ -60,3 +60,4 @@ npm test
   * Delete appeal
   * List of appeals
   * Comment on an appeal
+  * Like an appeal
