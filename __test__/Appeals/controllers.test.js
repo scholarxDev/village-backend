@@ -203,4 +203,19 @@ describe('Appeal', () => {
             })
         })
     })
+
+    describe('List Appeals Route', () => {
+        describe('Given the correct query params if any', () => {
+            test('Should return 200-statuscode and an array of appeals', async () => {
+                await new Appeal({ ...dummyAppeal }).save()
+
+                const response = await request(app)
+                    .get('/api/v1/appeal/list/all')
+                    .query({ page: 1, limit: 10 })
+
+                expect(response.statusCode).toBe(200)
+                expect(response.body.status).toBe('success')
+            })
+        })
+    })
 })
