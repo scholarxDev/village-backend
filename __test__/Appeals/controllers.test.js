@@ -233,4 +233,18 @@ describe('Appeal', () => {
             })
         })
     })
+
+    describe('Like an Appeal Route', () => {
+        describe('Given valid params ', () => {
+            test('Should return 200-statusCode and updated body', async () => {
+                await new Appeal({ ...dummyAppeal }).save()
+
+                const response = await request(app)
+                    .patch(`/api/v1/appeal/like/${appealID}`)
+
+                expect(response.statusCode).toBe(200)
+                expect(response.body.status).toBe('success')
+            })
+        })
+    })
 })
