@@ -59,3 +59,4 @@ npm test
   * Update appeal
   * Delete appeal
   * List of appeals
+  * Comment on an appeal
