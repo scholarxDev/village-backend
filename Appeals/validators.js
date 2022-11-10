@@ -44,9 +44,17 @@ const appealListSchema = Joi.object().keys({
     limit: Joi.number().integer()
 })
 
+const commentSchema = Joi.object().keys({
+    comment: Joi.object().keys({
+        name: Joi.string().trim(true).required(),
+        text: Joi.string().trim(true).required()
+    })
+})
+
 module.exports = {
     createAppealSchema,
     idSchema,
     updateAppealSchema,
-    appealListSchema
+    appealListSchema,
+    commentSchema
 }
