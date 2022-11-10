@@ -62,10 +62,21 @@ const deleteAppeal = async (req, res) => {
     res.status(StatusCodes.OK).json({ status: 'success', msg: 'appeal deleted' })
 }
 
+const appealList = async (req, res) => {
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 0
+    const skip = (page - 1) * limit
+
+    const appeals = await Appeal.find().sort('-amount_percentage').select('-__v -createdAt -updatedAt').skip(skip).limit(limit)
+
+    res.status(StatusCodes.OK).json({ status: 'success', appeals, nbhits: appeals.length })
+}
+
 module.exports = {
     createAppeal,
     getAll,
     getOne,
     updateAppeal,
-    deleteAppeal
+    deleteAppeal,
+    appealList
 }
