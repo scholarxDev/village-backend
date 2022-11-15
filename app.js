@@ -7,6 +7,7 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const appealRouter = require('./Appeals/routes')
+const donationRouter = require('./Donations/routes')
 
 // extra security packages
 const cors = require('cors')
@@ -39,6 +40,7 @@ app.use('/uploads', express.static(path.join('uploads')))
 
 // routes
 app.use('/api/v1/appeal', appealRouter)
+app.use('/api/v1/donations', donationRouter)
 
 app.use(errorHandlerMiddleware)
 app.use(notFound)
