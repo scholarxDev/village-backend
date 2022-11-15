@@ -7,6 +7,7 @@ This spells out project guidelines to ease project on-boarding and setup.
 Available features include:
 
 - Appeals
+- Donations
 
 
 #### Setup
@@ -61,3 +62,7 @@ npm test
   * List of appeals
   * Comment on an appeal
   * Like an appeal
+
+**2**. **Donations**
+
+ * Verify payments
