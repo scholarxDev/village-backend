@@ -2,6 +2,7 @@ const Appeal = require('./model')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../Errors')
 const { deleteImage } = require('../Utils/images')
+const Wallet = require('../Donations/model')
 
 const createAppeal = async (req, res) => {
     const body = { ...req.body }
@@ -14,6 +15,13 @@ const createAppeal = async (req, res) => {
     body.userid = userid
 
     const appeal = await Appeal.create(body)
+
+    // creating users wallet
+    const wallet = await Wallet.findOne({ userid })
+    if (!wallet) {
+        await Wallet.create({ userid, total: 0 })
+    }
+
     res.status(StatusCodes.CREATED).json({ status: 'success', appeal })
 }
 
@@ -67,7 +75,7 @@ const appealList = async (req, res) => {
     const limit = Number(req.query.limit) || 0
     const skip = (page - 1) * limit
 
-    const appeals = await Appeal.find().sort('-amount_percentage').select('-__v -createdAt -updatedAt').skip(skip).limit(limit)
+    const appeals = await Appeal.find().sort('-amount_received').select('-__v -createdAt -updatedAt').skip(skip).limit(limit)
 
     res.status(StatusCodes.OK).json({ status: 'success', appeals, nbhits: appeals.length })
 }

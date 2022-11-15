@@ -45,7 +45,7 @@ const AppealSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'please provide the amount needed']
     },
-    amount_percentage: {
+    amount_received: {
         type: Number,
         default: 0
     },
