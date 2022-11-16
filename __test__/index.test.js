@@ -6,6 +6,6 @@ describe('App Instantiation', () => {
     test('Should show a documentation link', async () => {
         const response = await request(app)
             .get('/')
-        expect(response.text).toBe('<h4>village api is up and running at </h4><a href="">Documentation</a>')
+        expect(response.text).toBe('<h4>village api is up and running at </h4><a href="https://documenter.getpostman.com/view/14326360/2s8YmLu2v2">Documentation</a>')
     })
 })
